@@ -18,9 +18,11 @@ void MoleculReader::readToMol(const char* fileName){
     OBConversion conv;
     mol.Clear();
     //inFormat = conv.FormatFromExt(fileName.c_str());
-    conv.SetInFormat(/*"mol2"*/"PDB"/*"XML", "mol"*//*inFormat*/);
+    //OBFormat* inFormat = conv.FormatFromExt(fileName);
+    conv.SetInFormat("PDB");
     conv.Read(&mol,&ifstr);
    
+
 
 
 }
@@ -28,5 +30,4 @@ OBMol & MoleculReader::getMol(){
    return mol;
 
 }
-
 

@@ -26,6 +26,7 @@ ENDIF(NOT DEVELOPMENT_ROOT)
 SET(CMAKE_AUTOMOC ON)
 FIND_PACKAGE(Qt5Core REQUIRED)
 FIND_PACKAGE(Qt5Widgets REQUIRED)
+FIND_PACKAGE(Qt5OpenGL REQUIRED)
 
 # OpenBabel --------------------------------------
 SET(OPEN_BABEL_ROOT ${DEVELOPMENT_ROOT}/thirdparty/obcore/2.3.1)
@@ -39,6 +40,7 @@ MESSAGE(${VTK_DIR})
 FIND_PACKAGE(VTK REQUIRED)
 INCLUDE(${VTK_USE_FILE})
 
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ldl -lpthread")
 # ==============================================================================
 # output directories -----------------------------------------------------------
 # ==============================================================================
