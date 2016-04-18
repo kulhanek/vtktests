@@ -13,7 +13,5 @@ src/moc_mainwindow.cpp
 src/moleculreader.cpp
 src/moleculreader.h
 src/myprog_automoc.cpp
-src/quitbutton.cpp
-src/quitbutton.h
 src/ui_mainwindow.h
 src/mainwindow.ui

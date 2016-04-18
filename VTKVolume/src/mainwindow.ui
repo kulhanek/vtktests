@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>436</width>
-    <height>337</height>
+    <width>574</width>
+    <height>372</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,20 +17,13 @@
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>190</y>
-      <width>261</width>
+      <x>180</x>
+      <y>170</y>
+      <width>206</width>
       <height>80</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="pushButton">
-       <property name="text">
-        <string>Open File</string>
-       </property>
-      </widget>
-     </item>
      <item>
       <widget class="QPushButton" name="pushButton_2">
        <property name="text">
@@ -38,42 +31,11 @@
        </property>
       </widget>
      </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>40</y>
-      <width>196</width>
-      <height>80</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QPushButton" name="pushButton">
        <property name="text">
-        <string>Dislpay Model: </string>
+        <string>Load File </string>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="comboBox">
-       <item>
-        <property name="text">
-         <string>VDW</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Liquorice</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>CPK</string>
-        </property>
-       </item>
       </widget>
      </item>
     </layout>
@@ -85,7 +47,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>436</width>
+     <width>574</width>
      <height>25</height>
     </rect>
    </property>

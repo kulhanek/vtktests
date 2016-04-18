@@ -126,22 +126,13 @@ void MainWindow::on_pushButton_clicked()
     vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();
         actor->SetMapper(molmapper);
         actor->GetProperty()->SetColor(0.5,0.6,0.2);
-//        // we override the default shader very slightly so that
-//        // the ambient color component is scaled off the diffuse
-//        molmapper->GetFastAtomMapper()->AddShaderReplacement(
-//          vtkShader::Fragment,  // in the fragment shader
-//          "//VTK::Color::Impl",
-//          true, // before the standard replacements
-//          "//VTK::Color::Impl\n" // we still want the default
-//          "  ambientColor = diffuseColor*0.2;\n", //but we add this
-//          false // only do it once
-//          );actor->GetProperty()->SetDiffuse(0.7);
 
 
 
 
     vtkSmartPointer<vtkRenderer> renderer = vtkSmartPointer<vtkRenderer>::New();
        renderer->AddActor(actor);
+
 
 
 //------------------DISPLAY SCENE--------------------------------------
@@ -156,15 +147,15 @@ void MainWindow::on_pushButton_clicked()
 
 
 
-//        renderer->SetBackground(0.0,0.0,0.0);
-        renderer->SetBackground2(0.2, 0.2, 0.3);
-        renderer->SetBackground(0.1, 0.1, 0.15);
-        renderer->SetOcclusionRatio(0.5);
-        renderer->SetAmbient(0.7,0.7,0.7);
-        renderer->GradientBackgroundOn();
+        renderer->SetBackground(1.0,1.0,1.0);
+//        renderer->SetBackground2(0.2, 0.2, 0.3);
+//        renderer->SetBackground(1.0, 0.89, 0.7);
+//        renderer->SetOcclusionRatio(0.2);
+//        renderer->SetAmbient(0.7,0.7,0.7);
+//        renderer->GradientBackgroundOn();
         renderer->ResetCamera();
 
-        renderWindow->SetMultiSamples(0); //
+//        renderWindow->SetMultiSamples(0); //
         renderWindow->GetInteractor()->Initialize();
         iren->Start();
         renderWindow->Render();
