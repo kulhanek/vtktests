@@ -6,7 +6,6 @@
 SET(PROGRAM_SRC
     main.cpp
     mainwindow.cpp
-    moleculreader.cpp
     )
 
 SET(PROGRAM_UI

@@ -10,6 +10,7 @@ src/main.cpp
 src/mainwindow.cpp
 src/mainwindow.h
 src/moc_mainwindow.cpp
+src/moleculreader.cpp
+src/moleculreader.h
 src/myprog_automoc.cpp
 src/ui_mainwindow.h
-src/mainwindow.ui

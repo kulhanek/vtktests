@@ -5,6 +5,7 @@
 #include <vtkSmartPointer.h>
 #include <vtkMoleculeMapper.h>
 
+
 namespace Ui {
 class MainWindow;
 }
@@ -20,10 +21,10 @@ public:
 private slots:
     void on_pushButton_clicked();
     void on_pushButtonQuit_clicked();
-    void on_comboBox_currentIndexChanged(int index);
 private:
     Ui::MainWindow *ui;
     vtkSmartPointer<vtkMoleculeMapper> molmapper;
+
 };
 
 #endif // MAINWINDOW_H

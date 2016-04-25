@@ -2,7 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <vtkContourFilter.h>
+#include <vtkSmartPointer.h>
 
 namespace Ui {
 class MainWindow;
@@ -21,6 +22,7 @@ private slots:
     void on_pushButtonQuit_clicked();
 private:
     Ui::MainWindow *ui;
+    vtkSmartPointer<vtkContourFilter> contour;
 };
 
 #endif // MAINWINDOW_H

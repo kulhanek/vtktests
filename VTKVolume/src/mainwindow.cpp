@@ -1,10 +1,27 @@
+// =============================================================================
+// NEMESIS - Molecular Modelling Package
+// -----------------------------------------------------------------------------
+//    Copyright (C) 2016 Matej Stevuliak, 423943@mail.muni.cz
+//    Copyright (C) 2016 Petr Kulhanek, kulhanek@chemi.muni.cz
+//
+//     This program sin free software; you can redistribute it and/or modify
+//     it under the terms of the GNU General Public License as published by
+//     the Free Software Foundation; either version 2 of the License, or
+//     (at your option) any later version.
+//
+//     This program sin distributed in the hope that it will be useful,
+//     but WITHOUT ANY WARRANTY; without even the implied warranty of
+//     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//     GNU General Public License for more details.
+//
+//     You should have received a copy of the GNU General Public License along
+//     with this program; if not, write to the Free Software Foundation, Inc.,
+//     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+// =============================================================================
 #include <QFileDialog>
-#include <QGLFormat>
-#include <QtOpenGL>
-#include <QVTKWidget2.h>
-#include <QVTKWidget.h>
+
 //VTK
-#include <vtkSphereSource.h>
+
 #include <vtkSmartPointer.h>
 #include "vtkPolyDataMapper.h"
 #include "vtkActor.h"
@@ -12,82 +29,34 @@
 #include "vtkRenderWindow.h"
 #include "vtkProperty.h"
 #include "vtkCamera.h"
-#include <vtkVersion.h>
 #include <vtkPolyData.h>
-#include <vtkAppendPolyData.h>
-#include <vtkCellArray.h>
-#include "vtkRenderer.h"
 #include "vtkCommand.h"
-#include <vtkGenericOpenGLRenderWindow.h>
-#include <vtkOpenGLRenderer.h>
 #include <vtkInteractorStyleTrackballCamera.h>
 #include <vtkRenderWindowInteractor.h>
 #include "vtkNew.h"
-#include <vtkCellArray.h>
-#include <vtkTubeFilter.h>
-#include <vtkLineSource.h>
-#include <vtkFloatArray.h>
-//-------test----------
 #include <vtkPiecewiseFunction.h>
-#include <vtkAbstractElectronicData.h>
-#include "vtkSmartVolumeMapper.h"
-#include "vtkVolume.h"
-#include "vtkVolumeProperty.h"
 #include "vtkImageData.h"
 #include "vtkImageShiftScale.h"
-#include "vtkFixedPointVolumeRayCastMapper.h"
-#include <vtkContourGrid.h>
 #include <vtkOutlineFilter.h>
 #include <vtkProbeFilter.h>
-#include <vtkImplicitDataSet.h>
-#include <vtkCutter.h>
-#include <vtkUnstructuredGrid.h>
-
-//-------test----------
-
-
 #include <vtkGaussianCubeReader.h>
-#include <vtkMoleculeToAtomBallFilter.h>
-#include <vtkAtom.h>
-#include <vtkBond.h>
-#include <vtkMolecule.h>
-#include <vtkMoleculeMapper.h>
 #include <vtkContourFilter.h>
-#include <vtkEdgePoints.h>
-#include <vtkMarchingCubes.h>
 #include <vtkPolyDataNormals.h>
-#include <vtkImageShiftScale.h>
-#include <vtkVolume.h>
-#include <vtkFixedPointVolumeRayCastMapper.h>
-#include <vtkVolumeProperty.h>
 #include <vtkColorTransferFunction.h>
-#include <vtkStructuredGrid.h>
 #include <vtkProbeFilter.h>
 #include <vtkPointData.h>
-//OB
-#include <openbabel/obconversion.h>
-#include <openbabel/mol.h>
-#include <openbabel/atom.h>
-#include <openbabel/griddata.h>
-#include <openbabel/generic.h>
-#include <openbabel/grid.h>
+#include <vtkObjectFactory.h>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "moleculreader.h"
-
 
 using namespace std;
-using namespace OpenBabel;
-
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-
 }
 
 MainWindow::~MainWindow()
@@ -95,150 +64,139 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// Subclass for setting own inretactor style ==============================
+
+class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
+{
+  public:
+    static KeyPressInteractorStyle* New();
+    vtkTypeMacro(KeyPressInteractorStyle, vtkInteractorStyleTrackballCamera);
 
 
+    virtual void OnKeyPress()
+    {
+      // Get the keypress
+      vtkRenderWindowInteractor *rwi = this->Interactor;
+      std::string key = rwi->GetKeySym();
 
-void MainWindow::on_pushButton_clicked(){
-////---------------- IMPLICITNE ISOVRSTVY----------------------------
-//    QString Qfilename = QFileDialog::getOpenFileName(this, tr("Open File"));
-//    MoleculReader *p_mr = new MoleculReader();
+      // keypress model setting
+      if(key == "a") {
+        Contour->SetValue(0, .02);
+      }
+      if(key == "s") {
+        Contour->SetValue(0, .002);
+      }
+      if(key == "d"){
+        Contour->SetValue(0, .0002);
+      }
+      // Forward events
+      vtkInteractorStyleTrackballCamera::OnKeyPress();
+    }
+    vtkContourFilter* Contour;
+};
 
-//    const char* fileName = Qfilename.toStdString().c_str();
+vtkStandardNewMacro(KeyPressInteractorStyle);
 
-//    p_mr->readToMol(fileName);
-
-//    vtkSmartPointer<vtkMolecule> vtkmol = vtkSmartPointer<vtkMolecule>::New();
-//    vtkmol->Initialize();
-
-//    for( unsigned int i = 1; i < (p_mr->getMol().NumAtoms())+1; i++){
-//        double x = p_mr->getMol().GetAtom(i)->GetX();
-//        double y = p_mr->getMol().GetAtom(i)->GetY();
-//        double z = p_mr->getMol().GetAtom(i)->GetZ();
-//        unsigned int A =  p_mr->getMol().GetAtom(i)->GetAtomicNum();
-//        vtkmol->AppendAtom(A,x,y,z);
-//    }
-
-
-//    vtkSmartPointer<vtkMoleculeToAtomBallFilter> molfilter = vtkSmartPointer<vtkMoleculeToAtomBallFilter>::New();
-//        molfilter->SetInputData(vtkmol);
-//        molfilter->SetRadiusSource(1);
-//        molfilter->SetRadiusScale(1.4);
-//        molfilter->SetResolution(30);
-
-//       ZISKAT IZOVRSTVU Z vdW MODELU
+//===========================================================================
 
 
+void MainWindow::on_pushButton_clicked() {
+    // open file dialogs for density and potencial files
+    QString Qfilenameden = QFileDialog::getOpenFileName(this, tr("Open Density File"));
+    QString Qfilenamepot = QFileDialog::getOpenFileName(this, tr("Open Potential File"));
 
-
-
-//-----------------NACITANIE GAUSSIAN CUBE POMOCOU VTK ------------------------
-
-        // Reads density cube file
-        vtkNew<vtkGaussianCubeReader> denReader;
-        denReader->SetFileName("/home/piader1/bakalarka/respfit/benzoat/volume/density.cube");
+    // reads density cube file
+    vtkNew<vtkGaussianCubeReader> denReader;
+        denReader->SetFileName(Qfilenameden.toLatin1().constData());
         denReader->SetHBScale(1.1);
         denReader->SetBScale(10);
         denReader->Update();
-        // Reads potential cube file
-        vtkNew<vtkGaussianCubeReader> potReader;
-        potReader->SetFileName("/home/piader1/bakalarka/respfit/benzoat/volume/potential.cube");
+
+    // reads potential cube file
+    vtkNew<vtkGaussianCubeReader> potReader;
+        potReader->SetFileName(Qfilenamepot.toLatin1().constData());
         potReader->SetHBScale(1.1);
         potReader->SetBScale(10);
         potReader->Update();
 
-//----------------------------------------------------------------------
-        //Outline Box
-        vtkNew<vtkOutlineFilter> bounds;
+    // outline Box
+    vtkNew<vtkOutlineFilter> bounds;
         bounds->SetInputData(denReader->GetGridOutput());
 
-        vtkNew<vtkPolyDataMapper> boundsMapper;
+    vtkNew<vtkPolyDataMapper> boundsMapper;
         boundsMapper->SetInputConnection(bounds->GetOutputPort());
 
-        vtkNew<vtkActor> boundsActor;
+    vtkNew<vtkActor> boundsActor;
         boundsActor->SetMapper(boundsMapper.GetPointer());
-        boundsActor->GetProperty()->SetColor(0.5, 0.6, 0.7);
+        boundsActor->GetProperty()->SetColor( 0, 0, 0 );
 
+    // shift scale
+    vtkNew<vtkImageShiftScale> den;
+        den->SetInputData(denReader->GetGridOutput());
 
-
-//        double range[2];
-
-//        denReader->GetGridOutput()->GetScalarRange(range);
-//        cout << "ImageData range: " << range[0] <<" "<< range[1] << "\n";
-//        vtkNew<vtkUnstructuredGrid> potgrid;
-//        potgrid->SetInputConnection(potReader->GetOutputPort());
-//        potgrid = potReader->GetGridOutput();
-
-        vtkNew<vtkImageShiftScale> t;
-        t->SetInputData(denReader->GetGridOutput());
-
-        vtkNew<vtkImageShiftScale> pot;
+    vtkNew<vtkImageShiftScale> pot;
         pot->SetInputData(potReader->GetGridOutput());
 
 
-//         Contour filter
-        vtkNew<vtkContourFilter> contour;
-        contour->SetInputConnection(t->GetOutputPort());
+    // contour filter creates isosurface
+    contour = vtkContourFilter::New();
+    // Contour fom style to contour
+    vtkSmartPointer<KeyPressInteractorStyle> style = vtkSmartPointer<KeyPressInteractorStyle>::New();
+        style->Contour = contour;
+
+        contour->SetInputConnection(den->GetOutputPort());
         contour->SetNumberOfContours(1);
         contour->SetValue(0, .002);
 
-
-
-//        vtkNew<vtkContourFilter> potcontour;
-//        potcontour->SetInputConnection(pot->GetOutputPort());
-
-        //Probe filer
-        vtkNew<vtkProbeFilter> probe;
+    // Probe filer
+    vtkNew<vtkProbeFilter> probe;
         probe->SetInputConnection(contour->GetOutputPort());
         probe->SetSourceConnection(pot->GetOutputPort());
         probe->Update();
         probe->GetOutput()->GetPointData()->SetNormals(contour->GetOutput()->GetPointData()->GetNormals());
-//        probe->SpatialMatchOn();
-        double rangeESP[2];
-        probe->GetOutput()->GetScalarRange(rangeESP);
 
-        double range = rangeESP[1]-rangeESP[0];
-        double MinESP = rangeESP[0];
-        double MaxESP = rangeESP[1];
+    // get scale from isosurface
+    double rangeESP[2];
+    probe->GetOutput()->GetScalarRange(rangeESP);
 
+    double MinESP = rangeESP[0];
+    double MaxESP = rangeESP[1];
 
-        vtkNew<vtkColorTransferFunction> ctfESP;
-//        ctfESP->AddRGBPoint(-MaxESP,      1.0, 0.7, 0.7);
-        ctfESP->AddRGBPoint(/*0.5**/MinESP,  1.0, 0.0, 0.0);
-         ctfESP->AddRGBPoint((MinESP+MaxESP)/2, 0.0, 0.1, 0.0);
-//        ctfESP->AddRGBPoint( 1e-4*range, 0.0, 0.6, 0.4);
-        ctfESP->AddRGBPoint( MaxESP,  0.0, 0.0, 1.0);
-//        ctfESP->AddRGBPoint( MaxESP,      0.7, 0.7, 1.0);
+    // create color scale
+    vtkNew<vtkColorTransferFunction> ctfESP;
+        ctfESP->AddRGBPoint( MinESP,  1.0, 0.0, 0.0 );
+        ctfESP->AddRGBPoint( MaxESP,  0.0, 0.0, 1.0 );
         ctfESP->Build();
 
-
-        vtkNew<vtkPolyDataMapper> conmapper;
+    // mapper
+    vtkNew<vtkPolyDataMapper> conmapper;
         conmapper->SetInputConnection(probe->GetOutputPort());
         conmapper->SetLookupTable(ctfESP.GetPointer());
         conmapper->ScalarVisibilityOn();
         conmapper->SetScalarRange(pot->GetOutput()->GetScalarRange());
 
-
-        vtkNew<vtkActor> conactor;
+    // actor
+    vtkNew<vtkActor> conactor;
         conactor->SetMapper(conmapper.GetPointer());
         conactor->GetProperty()->SetSpecular(0);
         conactor->GetProperty()->SetDiffuse(1);
-//        conactor->SetScale(0.12);
 
-
-
-//-----------------DISPLAY SCENE-----------------------------------
-
+//DISPLAY SCENE------------------------------
+    // render
     vtkNew<vtkRenderer> ren;
         ren->AddActor(conactor.GetPointer());
         ren->AddActor(boundsActor.GetPointer());
+
+    // render window
     vtkNew<vtkRenderWindow> renwin;
         renwin->AddRenderer(ren.GetPointer());
 
+    // interctor
     vtkNew<vtkRenderWindowInteractor> iren;
         iren->SetRenderWindow(renwin.GetPointer());
+        iren->SetInteractorStyle(style);
 
-
-    ren->SetBackground(1.0, 1.0, 1.0);
+    ren->SetBackground( 1.0, 1.0, 1.0 );
     iren->Start();
     renwin->Render();
 
