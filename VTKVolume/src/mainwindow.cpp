@@ -108,18 +108,14 @@ void MainWindow::on_pushButton_clicked() {
     // reads density cube file
     vtkNew<vtkGaussianCubeReader> denReader;
         denReader->SetFileName(Qfilenameden.toLatin1().constData());
-        denReader->SetHBScale(1.1);
-        denReader->SetBScale(10);
         denReader->Update();
 
     // reads potential cube file
     vtkNew<vtkGaussianCubeReader> potReader;
         potReader->SetFileName(Qfilenamepot.toLatin1().constData());
-        potReader->SetHBScale(1.1);
-        potReader->SetBScale(10);
         potReader->Update();
 
-    // outline Box
+//     outline Box
     vtkNew<vtkOutlineFilter> bounds;
         bounds->SetInputData(denReader->GetGridOutput());
 
@@ -140,13 +136,14 @@ void MainWindow::on_pushButton_clicked() {
 
     // contour filter creates isosurface
     contour = vtkContourFilter::New();
-    // Contour fom style to contour
-    vtkSmartPointer<KeyPressInteractorStyle> style = vtkSmartPointer<KeyPressInteractorStyle>::New();
-        style->Contour = contour;
-
+        
         contour->SetInputConnection(den->GetOutputPort());
         contour->SetNumberOfContours(1);
         contour->SetValue(0, .002);
+   
+    // Contour fom style to contour
+    vtkSmartPointer<KeyPressInteractorStyle> style = vtkSmartPointer<KeyPressInteractorStyle>::New();
+        style->Contour = contour;
 
     // Probe filer
     vtkNew<vtkProbeFilter> probe;
